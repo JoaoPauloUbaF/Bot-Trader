@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CSVReader {
-    String path = "F:/codes/Bot Trader/Bot Trader/files/Read.csv";
+    String path = "F:/codes/Bot-Trader/Bot Trader/files/Read.csv";
     String line = "";
     List<String> datahora = new ArrayList<String>();
     List<String> abertura = new ArrayList<String>();

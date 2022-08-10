@@ -47,44 +47,44 @@ public class App {
                 List<Double> mediaCurtaSimpAlta = calcs.getMovingMediaSimple(alta, 25);
                 List<Double> mediaCurtaSimpBaixa = calcs.getMovingMediaSimple(baixa, 25);
 
-                // demo = new DynamicDataDemo("Gráfico de médias em tempo real",
-                // calcs.getMedia(fechamento));
-                // demo.pack();
-                // RefineryUtilities.centerFrameOnScreen(demo);
-                // demo.setVisible(true);
+                demo = new DynamicDataDemo("Gráfico de médias em tempo real",
+                                calcs.getMedia(fechamento));
+                demo.pack();
+                RefineryUtilities.centerFrameOnScreen(demo);
+                demo.setVisible(true);
 
-                // Runnable helloRunnable = new Runnable() {
-                // public void run() {
-                // Double result1 = null;
-                // Double result2 = null;
-                // Double result3 = null;
+                Runnable helloRunnable = new Runnable() {
+                        public void run() {
+                                Double result1 = null;
+                                Double result2 = null;
+                                Double result3 = null;
 
-                // if (it < (fechamento.size() - (periodoLonga - 1))) {
-                // result1 = calcs.getMovingMediaSimpleChart(fechamento, periodoCurta, it);
-                // }
-                // if (it < (fechamento.size() - (periodoLonga - 1))) {
-                // result2 = calcs.getMovingMediaSimpleChart(fechamento, periodoInterm, it);
-                // }
-                // if (it < (fechamento.size() - (periodoLonga - 1))) {
-                // result3 = calcs.getMovingMediaSimpleChart(fechamento, periodoLonga, it);
-                // }
-                // demo.addToSeries(result1, result2, result3);
-                // it++;
-                // if (it >= (fechamento.size() - (periodoLonga - 1))) {
-                // executor.shutdown();
-                // }
-                // }
-                // };
+                                if (it < (fechamento.size() - (periodoLonga - 1))) {
+                                        result1 = calcs.getMovingMediaSimpleChart(fechamento, periodoCurta, it);
+                                }
+                                if (it < (fechamento.size() - (periodoLonga - 1))) {
+                                        result2 = calcs.getMovingMediaSimpleChart(fechamento, periodoInterm, it);
+                                }
+                                if (it < (fechamento.size() - (periodoLonga - 1))) {
+                                        result3 = calcs.getMovingMediaSimpleChart(fechamento, periodoLonga, it);
+                                }
+                                demo.addToSeries(result1, result2, result3);
+                                it++;
+                                if (it >= (fechamento.size() - (periodoLonga - 1))) {
+                                        executor.shutdown();
+                                }
+                        }
+                };
 
-                // executor = Executors.newScheduledThreadPool(1);
-                // executor.scheduleAtFixedRate(helloRunnable, 0, 100, TimeUnit.MILLISECONDS);
+                executor = Executors.newScheduledThreadPool(1);
+                executor.scheduleAtFixedRate(helloRunnable, 0, 100, TimeUnit.MILLISECONDS);
 
-                // for (int i = 0; i < fechamento.size() - 49; i++) {
+                for (int i = 0; i < fechamento.size() - 49; i++) {
 
-                // Double result = calcs.getMovingMediaSimpleChart(fechamento, 50, i);
-                // System.out.println(result);
-                // // TimeUnit.MILLISECONDS.sleep(10);
-                // }
+                        Double result = calcs.getMovingMediaSimpleChart(fechamento, 50, i);
+                        System.out.println(result);
+                        // TimeUnit.MILLISECONDS.sleep(10);
+                }
 
                 double desvioPadFechamento = calcs.SD(fechamento);
                 double desvioPadAbertura = calcs.SD(abertura);
