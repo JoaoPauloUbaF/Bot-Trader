@@ -38,6 +38,7 @@
  */
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -71,6 +72,9 @@ public class DynamicDataDemo extends ApplicationFrame implements ActionListener 
 
     /** The most recent value added. */
     private double lastValue = 100.0;
+    private TimeSeries series4;
+    private TimeSeries series5;
+    private TimeSeries series6;
 
     /**
      * Constructs a new demonstration application.
@@ -80,29 +84,47 @@ public class DynamicDataDemo extends ApplicationFrame implements ActionListener 
     public DynamicDataDemo(final String title, final Double mean) {
 
         super(title);
-        this.series1 = new TimeSeries("Med Curta", Millisecond.class);
-        this.series2 = new TimeSeries("Med Intermediária", Millisecond.class);
-        this.series3 = new TimeSeries("Med Longa", Millisecond.class);
+        this.series1 = new TimeSeries("Med Curta Simples", Millisecond.class);
+        this.series2 = new TimeSeries("Med Intermediária Simples", Millisecond.class);
+        this.series3 = new TimeSeries("Med Longa Simples", Millisecond.class);
+
+        this.series4 = new TimeSeries("Med Curta Exponencial", Millisecond.class);
+        this.series5 = new TimeSeries("Med Intermediária Exponencial", Millisecond.class);
+        this.series6 = new TimeSeries("Med Longa Exponencial", Millisecond.class);
 
         final TimeSeriesCollection dataset = new TimeSeriesCollection();
         dataset.addSeries(series1);
         dataset.addSeries(series2);
         dataset.addSeries(series3);
 
-        final JFreeChart chart = createChart(dataset, mean);
+        final TimeSeriesCollection dataset1 = new TimeSeriesCollection();
+        dataset1.addSeries(series4);
+        dataset1.addSeries(series5);
+        dataset1.addSeries(series6);
+
+        final JFreeChart chart = createChart(dataset, mean, "Gráfico de Médias Simples");
+
+        final JFreeChart chart1 = createChart(dataset1, mean, "Gráfico de médias Exponenciais");
 
         final ChartPanel chartPanel = new ChartPanel(chart);
-
-        final JPanel content = new JPanel(new BorderLayout());
+        final ChartPanel chartPanel1 = new ChartPanel(chart1);
+        GridLayout experimentLayout = new GridLayout(0, 1);
+        final JPanel content = new JPanel(experimentLayout);
         content.add(chartPanel);
-        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+        content.add(chartPanel1);
+        chartPanel.setPreferredSize(new java.awt.Dimension(500, 400));
+        chartPanel1.setPreferredSize(new java.awt.Dimension(500, 400));
         setContentPane(content);
     }
 
-    public void addToSeries(Double curta, Double interm, Double longa) {
+    public void addToSeries(Double curta, Double interm, Double longa, Double curtaEx, Double intermEx,
+            Double longaEx) {
         this.series1.add(new Millisecond(), curta);
         this.series2.add(new Millisecond(), interm);
         this.series3.add(new Millisecond(), longa);
+        this.series4.add(new Millisecond(), curta);
+        this.series5.add(new Millisecond(), interm);
+        this.series6.add(new Millisecond(), longa);
     }
 
     /**
@@ -112,9 +134,9 @@ public class DynamicDataDemo extends ApplicationFrame implements ActionListener 
      * 
      * @return A sample chart.
      */
-    private JFreeChart createChart(final XYDataset dataset, final Double mean) {
+    private JFreeChart createChart(final XYDataset dataset, final Double mean, final String title) {
         final JFreeChart result = ChartFactory.createTimeSeriesChart(
-                "Gráfico de médias",
+                title,
                 "Time",
                 "Value",
                 dataset,
@@ -126,7 +148,7 @@ public class DynamicDataDemo extends ApplicationFrame implements ActionListener 
         axis.setAutoRange(true);
         axis.setFixedAutoRange(60000.0); // 60 seconds
         axis = plot.getRangeAxis();
-        axis.setRange(mean - (0.1 * mean), mean + (0.1 * mean));
+        // axis.setRange(mean - (0.1 * mean), mean + (0.1 * mean));
         return result;
     }
 

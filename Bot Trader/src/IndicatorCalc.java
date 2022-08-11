@@ -8,6 +8,18 @@ public class IndicatorCalc {
     private double res = 0.0;
     private double sq = 0.0;
 
+    private Double oldValue;
+
+    public double average(double value, double alpha) {
+        if (oldValue == null) {
+            oldValue = value;
+            return value;
+        }
+        double newValue = oldValue + alpha * (value - oldValue);
+        oldValue = newValue;
+        return newValue;
+    }
+
     public double getMedia(List<String> data) {
         int n = data.size();
         double[] args = new double[n];
