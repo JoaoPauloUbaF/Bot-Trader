@@ -51,6 +51,21 @@ public class App {
                 List<Double> mediaCurtaSimpAlta = calcs.getMovingMediaSimple(alta, 25);
                 List<Double> mediaCurtaSimpBaixa = calcs.getMovingMediaSimple(baixa, 25);
 
+                List<Double> mediaLongaExpFecham = calcs.expAverageToCsv(fechamento, multLong);
+                List<Double> mediaLongaExpAbert = calcs.expAverageToCsv(abertura, multLong);
+                List<Double> mediaLongaExpAlta = calcs.expAverageToCsv(alta, multLong);
+                List<Double> mediaLongaExpBaixa = calcs.expAverageToCsv(baixa, multLong);
+
+                List<Double> mediaIntermExpFecham = calcs.expAverageToCsv(fechamento, multInterm);
+                List<Double> mediaIntermExpAbert = calcs.expAverageToCsv(abertura, multInterm);
+                List<Double> mediaIntermExpAlta = calcs.expAverageToCsv(alta, multInterm);
+                List<Double> mediaIntermExpBaixa = calcs.expAverageToCsv(baixa, multInterm);
+
+                List<Double> mediaCurtaExpFecham = calcs.expAverageToCsv(fechamento, multCurto);
+                List<Double> mediaCurtaExpAbert = calcs.expAverageToCsv(abertura, multCurto);
+                List<Double> mediaCurtaExpAlta = calcs.expAverageToCsv(alta, multCurto);
+                List<Double> mediaCurtaExpBaixa = calcs.expAverageToCsv(baixa, multCurto);
+
                 demo = new DynamicDataDemo("Gráfico de médias em tempo real",
                                 calcs.getMedia(fechamento));
                 demo.pack();
@@ -59,6 +74,10 @@ public class App {
 
                 Runnable helloRunnable = new Runnable() {
                         public void run() {
+                                RealTimeChart(calcs, fechamento);
+                        }
+
+                        private void RealTimeChart(IndicatorCalc calcs, List<String> data) {
                                 Double result1 = null;
                                 Double result2 = null;
                                 Double result3 = null;
@@ -67,17 +86,15 @@ public class App {
                                 Double result6 = null;
 
                                 if (it < (fechamento.size() - (periodoLonga - 1))) {
-                                        result1 = calcs.getMovingMediaSimpleChart(fechamento, periodoCurta, it);
-                                        result2 = calcs.getMovingMediaSimpleChart(fechamento, periodoInterm, it);
-                                        result3 = calcs.getMovingMediaSimpleChart(fechamento, periodoLonga, it);
+                                        result1 = calcs.getMovingMediaSimpleChart(data, periodoCurta, it);
+                                        result2 = calcs.getMovingMediaSimpleChart(data, periodoInterm, it);
+                                        result3 = calcs.getMovingMediaSimpleChart(data, periodoLonga, it);
                                 }
-                                result4 = calcs.average(Double.parseDouble(fechamento.get(it)), multCurto);
-                                result5 = calcs.average(Double.parseDouble(fechamento.get(it)), multInterm);
-                                result6 = calcs.average(Double.parseDouble(fechamento.get(it)), multLong);
+                                result4 = calcs.average(Double.parseDouble(data.get(it)), multCurto);
+                                result5 = calcs.average(Double.parseDouble(data.get(it)), multInterm);
+                                result6 = calcs.average(Double.parseDouble(data.get(it)), multLong);
 
                                 demo.addToSeries(result1, result2, result3, result4, result5, result6);
-
-                                // System.out.println(result1 + " " + result4);
                                 it++;
                                 if (it >= (fechamento.size() - (periodoLonga - 1))) {
                                         executor.shutdown();
@@ -86,7 +103,7 @@ public class App {
                 };
 
                 executor = Executors.newScheduledThreadPool(1);
-                executor.scheduleAtFixedRate(helloRunnable, 0, 100, TimeUnit.MILLISECONDS);
+                executor.scheduleAtFixedRate(helloRunnable, 50, 100, TimeUnit.MILLISECONDS);
 
                 double desvioPadFechamento = calcs.SD(fechamento);
                 double desvioPadAbertura = calcs.SD(abertura);
@@ -99,7 +116,8 @@ public class App {
                 }
 
                 CSVWriter csvWriter = new CSVWriter();
-                String[] fileName = { "dadosCurta.csv", "dadosIntermed.csv", "dadosLonga.csv" };
+                String[] fileName = { "dadosCurtaSimples.csv", "dadosIntermedSimples.csv", "dadosLongaSimples.csv",
+                                "dadosCurtaExp.csv", "dadosIntermedExp.csv", "dadosLongaExp.csv" };
 
                 csvWriter.writeCSV(
                                 fileName[0], mediaCurtaSimpAbert, desvioPadAbertura,
@@ -113,20 +131,18 @@ public class App {
                                 fileName[2], mediaLongaSimpAbert, desvioPadAbertura,
                                 mediaLongaSimpFecham, desvioPadFechamento,
                                 mediaLongaSimpAlta, desvioPadAlta, mediaLongaSimpBaixa, desvioPadBaixa);
-
-                // EventQueue.invokeLater(() -> {
-                // var ex = new Chart(mediaCurtaSimpBaixa, mediaIntermSimpBaixa,
-                // mediaLongaSimpBaixa, hora);
-                // ex.initUI();
-                // ex.setVisible(true);
-                // });
-                // List<Double> mediaExpFechamento = new ArrayList<Double>();
-                // for (String string : fechamento) {
-                // mediaExpFechamento.add(calcs.average(Double.parseDouble(string), multCurto));
-                // }
-                // for (Double double1 : mediaExpFechamento) {
-                // System.out.println(double1);
-                // }
+                csvWriter.writeCSV(
+                                fileName[3], mediaCurtaExpAbert, desvioPadAbertura,
+                                mediaCurtaExpFecham, desvioPadFechamento,
+                                mediaCurtaExpAlta, desvioPadAlta, mediaCurtaExpBaixa, desvioPadBaixa);
+                csvWriter.writeCSV(
+                                fileName[4], mediaIntermExpAbert, desvioPadAbertura,
+                                mediaIntermExpFecham, desvioPadFechamento,
+                                mediaIntermExpAlta, desvioPadAlta, mediaIntermExpBaixa, desvioPadBaixa);
+                csvWriter.writeCSV(
+                                fileName[5], mediaLongaExpAbert, desvioPadAbertura,
+                                mediaLongaExpFecham, desvioPadFechamento,
+                                mediaLongaExpAlta, desvioPadAlta, mediaLongaExpBaixa, desvioPadBaixa);
 
         }
 }

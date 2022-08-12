@@ -20,6 +20,20 @@ public class IndicatorCalc {
         return newValue;
     }
 
+    public List<Double> expAverageToCsv(List<String> data, double alpha) {
+        List<Double> result = new ArrayList<Double>();
+        for (String value : data) {
+            if (oldValue == null) {
+                oldValue = Double.parseDouble(value);
+                result.add(Double.parseDouble(value));
+            }
+            double newValue = oldValue + alpha * (Double.parseDouble(value) - oldValue);
+            oldValue = newValue;
+            result.add(oldValue);
+        }
+        return result;
+    }
+
     public double getMedia(List<String> data) {
         int n = data.size();
         double[] args = new double[n];
