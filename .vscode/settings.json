@@ -1,6 +1,7 @@
 {
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "f:\\codes\\jfreechart-1.0.19\\jfreechart-1.0.19-demo.jar"
+        "f:\\codes\\jfreechart-1.0.19\\jfreechart-1.0.19-demo.jar",
+        "c:\\Users\\turko\\OneDrive\\Documentos\\rubens]\\jfreechart-1.0.19\\jfreechart-1.0.19-demo.jar"
     ]
 }

@@ -1,14 +1,24 @@
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Corretora {
 
-    private String[] ativos = { "ativo1", "ativo2", "ativo3", "ativo4" };
+    private List<Stock> stocks = new ArrayList<Stock>();
     private int operações = 1000;
     private boolean isC1Free = true;
     private boolean isC2Free = true;
 
-    public Corretora() {
+    public Corretora(Stock stock) {
+        this.stocks.add(stock);
+    }
 
+    public List<Stock> getStocks() {
+        return stocks;
+    }
+
+    public void addStocks(Stock stock) {
+        this.stocks.add(stock);
     }
 
     public boolean isC2Free() {

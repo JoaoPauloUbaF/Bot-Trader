@@ -25,9 +25,9 @@ public class Chart extends JFrame {
     List<Double> medCurta = new ArrayList<Double>();
     List<Double> medInterm = new ArrayList<Double>();
     List<Double> medLong = new ArrayList<Double>();
-    List<Double> horario = new ArrayList<Double>();
+    List<String> horario = new ArrayList<String>();
 
-    public Chart(List<Double> medCurta, List<Double> medInterm, List<Double> medLong, List<Double> horario) {
+    public Chart(List<Double> medCurta, List<Double> medInterm, List<Double> medLong, List<String> horario) {
         this.medCurta = medCurta;
         this.medInterm = medInterm;
         this.medLong = medLong;

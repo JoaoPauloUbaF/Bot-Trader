@@ -81,7 +81,7 @@ public class DynamicDataDemo extends ApplicationFrame implements ActionListener 
      *
      * @param title the frame title.
      */
-    public DynamicDataDemo(final String title, final Double mean) {
+    public DynamicDataDemo(final String title, final Double mean, final String stockSymbol) {
 
         super(title);
         this.series1 = new TimeSeries("Med Curta Simples", Millisecond.class);
@@ -102,9 +102,9 @@ public class DynamicDataDemo extends ApplicationFrame implements ActionListener 
         dataset1.addSeries(series5);
         dataset1.addSeries(series6);
 
-        final JFreeChart chart = createChart(dataset, mean, "Gráfico de Médias Simples");
+        final JFreeChart chart = createChart(dataset, mean, stockSymbol + "-Gráfico de Médias Simples");
 
-        final JFreeChart chart1 = createChart(dataset1, mean, "Gráfico de médias Exponenciais");
+        final JFreeChart chart1 = createChart(dataset1, mean, stockSymbol + "-Gráfico de médias Exponenciais");
 
         final ChartPanel chartPanel = new ChartPanel(chart);
         final ChartPanel chartPanel1 = new ChartPanel(chart1);
@@ -122,9 +122,9 @@ public class DynamicDataDemo extends ApplicationFrame implements ActionListener 
         this.series1.add(new Millisecond(), curta);
         this.series2.add(new Millisecond(), interm);
         this.series3.add(new Millisecond(), longa);
-        this.series4.add(new Millisecond(), curta);
-        this.series5.add(new Millisecond(), interm);
-        this.series6.add(new Millisecond(), longa);
+        this.series4.add(new Millisecond(), curtaEx);
+        this.series5.add(new Millisecond(), intermEx);
+        this.series6.add(new Millisecond(), longaEx);
     }
 
     /**

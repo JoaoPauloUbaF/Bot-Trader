@@ -15,7 +15,7 @@ public class IndicatorCalc {
             oldValue = value;
             return value;
         }
-        double newValue = oldValue + alpha * (value - oldValue);
+        double newValue = (oldValue * (1 - alpha)) + (alpha * value);
         oldValue = newValue;
         return newValue;
     }
@@ -34,13 +34,13 @@ public class IndicatorCalc {
         return result;
     }
 
-    public double getMedia(List<String> data) {
+    public double getMedia(List<Double> data) {
         int n = data.size();
         double[] args = new double[n];
         int m = 0;
         // System.out.println("Elements are:");
-        for (String string : data) {
-            args[m] = Double.parseDouble(string);
+        for (Double string : data) {
+            args[m] = (string);
             m++;
             // System.out.println(Double.parseDouble(string));
         }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CSVReader {
-    String path = "F:/codes/Bot-Trader/Bot Trader/files/Read.csv";
+    // String path = "Bot Trader/files/Read.csv";
     String line = "";
     List<String> datahora = new ArrayList<String>();
     List<String> abertura = new ArrayList<String>();
@@ -15,7 +15,7 @@ public class CSVReader {
     List<String> baixa = new ArrayList<String>();
     List<String> fechamento = new ArrayList<String>();
 
-    public void readCSV() {
+    public void readCSV(String path) {
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             int i = 0;
