@@ -8,6 +8,7 @@ public class Corretora {
     private int operações = 1000;
     private boolean isC1Free = true;
     private boolean isC2Free = true;
+    private List<Caixa> caixaGeral = new ArrayList<Caixa>();
 
     public Corretora(Stock stock) {
         this.stocks.add(stock);
@@ -41,9 +42,44 @@ public class Corretora {
         this.operações--;
     }
 
-    public void Caixa1(String ativo, boolean venda, Date datacompra, int volume) {
-        setOperações();
+    public void Compra(Stock stock, Cliente cliente, int volume, Date hora) {
+        if (isC1Free()) {
+            setC1Free(false);
+            setOperações();
+            cliente.setSaldoCompra(volume * stock.getValor(hora));
+            caixaGeral.add(
+                    new Caixa(cliente.getNome(), stock.getStockSymbol(), "compra", "Caixa1", hora,
+                            stock.getValor(hora)));
+            setC1Free(true);
+        } else if (isC2Free()) {
+            setC2Free(false);
+            setOperações();
+            cliente.setSaldoCompra(volume * stock.getValor(hora));
+            caixaGeral.add(
+                    new Caixa(cliente.getNome(), stock.getStockSymbol(), "compra", "Caixa2", hora,
+                            stock.getValor(hora)));
+            setC2Free(true);
+        }
+    }
 
+    public void Venda(Stock stock, Cliente cliente, int volume, Date hora) {
+        if (isC1Free()) {
+            setC1Free(false);
+            setOperações();
+            cliente.setSaldoVenda(volume * stock.getValor(hora));
+            caixaGeral.add(
+                    new Caixa(cliente.getNome(), stock.getStockSymbol(), "venda", "Caixa1", hora,
+                            stock.getValor(hora)));
+            setC1Free(true);
+        } else if (isC2Free()) {
+            setC2Free(false);
+            setOperações();
+            cliente.setSaldoCompra(volume * stock.getValor(hora));
+            caixaGeral.add(
+                    new Caixa(cliente.getNome(), stock.getStockSymbol(), "venda", "Caixa2", hora,
+                            stock.getValor(hora)));
+            setC2Free(true);
+        }
     }
 
 }
