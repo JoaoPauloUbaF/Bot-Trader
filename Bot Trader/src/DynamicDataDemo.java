@@ -41,6 +41,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -102,9 +103,9 @@ public class DynamicDataDemo extends ApplicationFrame implements ActionListener 
         dataset1.addSeries(series5);
         dataset1.addSeries(series6);
 
-        final JFreeChart chart = createChart(dataset, mean, stockSymbol + "-Gráfico de Médias Simples");
+        final JFreeChart chart = createChart(dataset, 3600000.0, stockSymbol + "-Gráfico de Médias Simples");
 
-        final JFreeChart chart1 = createChart(dataset1, mean, stockSymbol + "-Gráfico de médias Exponenciais");
+        final JFreeChart chart1 = createChart(dataset1, 600000.0, stockSymbol + "-Gráfico de médias Exponenciais");
 
         final ChartPanel chartPanel = new ChartPanel(chart);
         final ChartPanel chartPanel1 = new ChartPanel(chart1);
@@ -118,13 +119,13 @@ public class DynamicDataDemo extends ApplicationFrame implements ActionListener 
     }
 
     public void addToSeries(Double curta, Double interm, Double longa, Double curtaEx, Double intermEx,
-            Double longaEx) {
-        this.series1.add(new Millisecond(), curta);
-        this.series2.add(new Millisecond(), interm);
-        this.series3.add(new Millisecond(), longa);
-        this.series4.add(new Millisecond(), curtaEx);
-        this.series5.add(new Millisecond(), intermEx);
-        this.series6.add(new Millisecond(), longaEx);
+            Double longaEx, Date time) {
+        this.series1.add(new Millisecond(time), curta);
+        this.series2.add(new Millisecond(time), interm);
+        this.series3.add(new Millisecond(time), longa);
+        this.series4.add(new Millisecond(time), curtaEx);
+        this.series5.add(new Millisecond(time), intermEx);
+        this.series6.add(new Millisecond(time), longaEx);
     }
 
     /**
@@ -134,7 +135,7 @@ public class DynamicDataDemo extends ApplicationFrame implements ActionListener 
      * 
      * @return A sample chart.
      */
-    private JFreeChart createChart(final XYDataset dataset, final Double mean, final String title) {
+    private JFreeChart createChart(final XYDataset dataset, final Double range, final String title) {
         final JFreeChart result = ChartFactory.createTimeSeriesChart(
                 title,
                 "Time",
@@ -146,9 +147,8 @@ public class DynamicDataDemo extends ApplicationFrame implements ActionListener 
         final XYPlot plot = result.getXYPlot();
         ValueAxis axis = plot.getDomainAxis();
         axis.setAutoRange(true);
-        axis.setFixedAutoRange(60000.0); // 60 seconds
+        axis.setFixedAutoRange(range); // 60 seconds
         axis = plot.getRangeAxis();
-        // axis.setRange(mean - (0.1 * mean), mean + (0.1 * mean));
         return result;
     }
 

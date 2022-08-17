@@ -1,6 +1,7 @@
 
 import java.util.Date;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +25,13 @@ public class Stock {
     public String stockSymbol, filepath;
 
     private List<String> datahora = new ArrayList<String>();
+
     private List<String> abertura = new ArrayList<String>();
     private List<String> alta = new ArrayList<String>();
     private List<String> baixa = new ArrayList<String>();
     private List<String> fechamento = new ArrayList<String>();
     private List<String> hora = new ArrayList<String>();
+    private List<Date> time = new ArrayList<Date>();
 
     public Stock(String stockSymbol, String filepath) {
         this.filepath = filepath;
@@ -46,11 +49,11 @@ public class Stock {
         reader.readCSV(stock.filepath);
 
         datahora = reader.getDatahora();
+        hora = reader.getHora();
         abertura = reader.getAbertura();
         alta = reader.getAlta();
         baixa = reader.getBaixa();
         fechamento = reader.getFechamento();
-        hora = new ArrayList<String>();
 
         List<Double> mediaLongaSimpFecham = calcs.getMovingMediaSimple(fechamento, 100);
         List<Double> mediaLongaSimpAbert = calcs.getMovingMediaSimple(abertura, 100);
@@ -82,6 +85,18 @@ public class Stock {
         List<Double> mediaCurtaExpAlta = calcs.expAverageToCsv(alta, multCurto);
         List<Double> mediaCurtaExpBaixa = calcs.expAverageToCsv(baixa, multCurto);
 
+        for (String string : datahora) {
+            try {
+                string = string + ":01";
+                Date data = new SimpleDateFormat("yyyy.MM.dd kk:mm:ss").parse(string);
+                this.time.add(data);
+                // System.out.println(data);
+            } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
         String graphWindowTitle = "Gráfico de médias em tempo real" + " " + stock.stockSymbol;
         demo = new DynamicDataDemo(
                 graphWindowTitle,
@@ -112,7 +127,8 @@ public class Stock {
                 result4 = calcs.average(Double.parseDouble(data.get(it)), multCurto);
                 result5 = calcs.average(Double.parseDouble(data.get(it)), multInterm);
                 result6 = calcs.average(Double.parseDouble(data.get(it)), multLong);
-                demo.addToSeries(result1, result2, result3, result4, result5, result6);
+                // System.out.println(result1);
+                demo.addToSeries(result1, result2, result3, result4, result5, result6, time.get(it));
                 it++;
                 if (it >= (fechamento.size() - (periodoLonga - 1))) {
                     executor.shutdown();
@@ -121,17 +137,12 @@ public class Stock {
         };
 
         executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(helloRunnable, 50, 100, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(helloRunnable, 50, 500, TimeUnit.MILLISECONDS);
 
         double desvioPadFechamento = calcs.SD(fechamento);
         double desvioPadAbertura = calcs.SD(abertura);
         double desvioPadAlta = calcs.SD(alta);
         double desvioPadBaixa = calcs.SD(baixa);
-
-        for (int i = 0; i < datahora.size(); i++) {
-            hora.add((datahora.get(i).charAt(11) + "" +
-                    datahora.get(i).charAt(12) + ":00"));
-        }
 
         CSVWriter csvWriter = new CSVWriter();
         String[] fileName = {

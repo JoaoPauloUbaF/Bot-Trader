@@ -41,7 +41,7 @@ public class Chart extends JFrame {
         JFreeChart chart = createChart(dataset);
         XYPlot plot = chart.getXYPlot();
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        rangeAxis.setRange(0.6, 0.65);
+        // rangeAxis.setRange(0.6, 0.65);
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         chartPanel.setBackground(Color.white);

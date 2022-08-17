@@ -2,7 +2,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Corretora {
+public class Corretora extends Thread {
 
     private List<Stock> stocks = new ArrayList<Stock>();
     private int operações = 1000;

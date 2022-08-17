@@ -10,6 +10,7 @@ public class CSVReader {
     // String path = "Bot Trader/files/Read.csv";
     String line = "";
     List<String> datahora = new ArrayList<String>();
+    List<String> hora = new ArrayList<String>();
     List<String> abertura = new ArrayList<String>();
     List<String> alta = new ArrayList<String>();
     List<String> baixa = new ArrayList<String>();
@@ -18,14 +19,15 @@ public class CSVReader {
     public void readCSV(String path) {
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
-            int i = 0;
+            br.readLine();
             while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                datahora.add(values[0]);
-                abertura.add(values[1]);
-                alta.add(values[2]);
-                baixa.add(values[3]);
-                fechamento.add(values[4]);
+                String[] values = line.split("\\s+");
+                datahora.add(values[0] + " " + values[1]);
+                hora.add(values[1]);
+                abertura.add(values[2]);
+                alta.add(values[3]);
+                baixa.add(values[4]);
+                fechamento.add(values[5]);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -40,6 +42,10 @@ public class CSVReader {
 
     public List<String> getDatahora() {
         return datahora;
+    }
+
+    public List<String> getHora() {
+        return hora;
     }
 
     public List<String> getAbertura() {
