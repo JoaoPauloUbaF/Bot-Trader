@@ -80,18 +80,30 @@ public class DynamicDataDemo extends ApplicationFrame implements ActionListener 
     /**
      * Constructs a new demonstration application.
      *
-     * @param title the frame title.
+     * @param title    the frame title.
+     * @param series62
+     * @param series52
+     * @param series42
+     * @param series32
+     * @param series22
+     * @param series12
+     * @param result6
+     * @param result5
+     * @param result4
+     * @param result3
+     * @param result2
+     * @param result1
      */
-    public DynamicDataDemo(final String title, final Double mean, final String stockSymbol) {
+    public DynamicDataDemo(final String title, final String stockSymbol, TimeSeries series1, TimeSeries series2,
+            TimeSeries series3, TimeSeries series4, TimeSeries series5, TimeSeries series6) {
 
         super(title);
-        this.series1 = new TimeSeries("Med Curta Simples", Millisecond.class);
-        this.series2 = new TimeSeries("Med Intermediária Simples", Millisecond.class);
-        this.series3 = new TimeSeries("Med Longa Simples", Millisecond.class);
-
-        this.series4 = new TimeSeries("Med Curta Exponencial", Millisecond.class);
-        this.series5 = new TimeSeries("Med Intermediária Exponencial", Millisecond.class);
-        this.series6 = new TimeSeries("Med Longa Exponencial", Millisecond.class);
+        this.series1 = series1;
+        this.series2 = series2;
+        this.series3 = series3;
+        this.series4 = series4;
+        this.series5 = series5;
+        this.series6 = series6;
 
         final TimeSeriesCollection dataset = new TimeSeriesCollection();
         dataset.addSeries(series1);
@@ -105,7 +117,7 @@ public class DynamicDataDemo extends ApplicationFrame implements ActionListener 
 
         final JFreeChart chart = createChart(dataset, 3600000.0, stockSymbol + "-Gráfico de Médias Simples");
 
-        final JFreeChart chart1 = createChart(dataset1, 600000.0, stockSymbol + "-Gráfico de médias Exponenciais");
+        final JFreeChart chart1 = createChart(dataset1, 3600000.0, stockSymbol + "-Gráfico de médias Exponenciais");
 
         final ChartPanel chartPanel = new ChartPanel(chart);
         final ChartPanel chartPanel1 = new ChartPanel(chart1);
