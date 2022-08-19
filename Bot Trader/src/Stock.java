@@ -5,13 +5,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
-import org.jfree.date.DateUtilities;
 import org.jfree.ui.RefineryUtilities;
 
 public class Stock implements Runnable {
@@ -63,28 +60,49 @@ public class Stock implements Runnable {
     List<Double> mediaCurtaExpAlta = new ArrayList<Double>();
     List<Double> mediaCurtaExpBaixa = new ArrayList<Double>();
 
-    private Double result1 = null;
-    private Double result2 = null;
-    private Double result3 = null;
-    private Double result4 = null;
-    private Double result5 = null;
-    private Double result6 = null;
+    private boolean flag = false;
 
-    // private TimeSeries series1 = new TimeSeries("Med Curta Simples",
-    // Millisecond.class);;
-    // private TimeSeries series2 = new TimeSeries("Med Intermediária Simples",
-    // Millisecond.class);
-    // private TimeSeries series3 = new TimeSeries("Med Longa Simples",
-    // Millisecond.class);
+    private List<Double> simpCurta = new ArrayList<Double>();
 
-    // /** The most recent value added. */
-    // private double lastValue = 100.0;
-    // private TimeSeries series4 = new TimeSeries("Med Curta Exponencial",
-    // Millisecond.class);
-    // private TimeSeries series5 = new TimeSeries("Med Intermediária Exponencial",
-    // Millisecond.class);
-    // private TimeSeries series6 = new TimeSeries("Med Longa Exponencial",
-    // Millisecond.class);
+    public Double getsimpCurta(int index) {
+        return simpCurta.get(index);
+    }
+
+    private List<Double> simpInter = new ArrayList<Double>();
+
+    public Double getsimpInter(int index) {
+        return simpInter.get(index);
+    }
+
+    private List<Double> simpLonga = new ArrayList<Double>();
+
+    public Double getsimpLonga(int index) {
+        return simpLonga.get(index);
+    }
+
+    private List<Double> expCurta = new ArrayList<Double>();
+
+    public Double getexpCurta(int index) {
+        return expCurta.get(index);
+    }
+
+    private List<Double> expInter = new ArrayList<Double>();
+
+    public Double getexpInter(int index) {
+        return expInter.get(index);
+    }
+
+    private List<Double> expLonga = new ArrayList<Double>();
+
+    public Double getexpLonga(int index) {
+        return expLonga.get(index);
+    }
+
+    public List<Date> opTime = new ArrayList<Date>();
+
+    public Date getOpTime(int index) {
+        return opTime.get(index);
+    }
 
     private IndicatorCalc calcs = new IndicatorCalc();
 
@@ -109,8 +127,6 @@ public class Stock implements Runnable {
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);
-        // Thread t1 = new Thread(this);
-        // t1.start();
     }
 
     public String getStockSymbol() {
@@ -159,10 +175,8 @@ public class Stock implements Runnable {
 
         for (String string : datahora) {
             try {
-                string = string + ":01";
                 Date data = new SimpleDateFormat("yyyy.MM.dd kk:mm:ss").parse(string);
                 this.time.add(data);
-                // System.out.println(data);
             } catch (ParseException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -201,29 +215,46 @@ public class Stock implements Runnable {
     }
 
     public Double getValor(Date hora) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd kk:mm");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd KK:mm:ss");
         String strDate = dateFormat.format(hora);
+        // System.out.println(strDate);
+        // System.out.println(Double.parseDouble(this.fechamento.get(this.datahora.indexOf(strDate))));
         return (Double.parseDouble(this.fechamento.get(this.datahora.indexOf(strDate))));
     }
 
     @Override
     public void run() {
 
-        if (it < (fechamento.size() - (periodoLonga - 1))) {
-            result1 = calcs.getMovingMediaSimpleChart(fechamento, periodoCurta, it);
-            result2 = calcs.getMovingMediaSimpleChart(fechamento, periodoInterm, it);
-            result3 = calcs.getMovingMediaSimpleChart(fechamento, periodoLonga, it);
-        }
-        result4 = calcs.average(Double.parseDouble(fechamento.get(it)), multCurto);
-        result5 = calcs.average(Double.parseDouble(fechamento.get(it)), multInterm);
-        result6 = calcs.average(Double.parseDouble(fechamento.get(it)), multLong);
-        // System.out.println(result1);
-        demo.addToSeries(result1, result2, result3, result4, result5, result6, time.get(it));
-        it++;
         if (it >= (fechamento.size() - (periodoLonga - 1))) {
+            System.out.println("Thread: " + stockSymbol + " close");
+            setFlag(true);
             executor.shutdown();
         }
-        System.out.println("Thread: " + stockSymbol + " simplescurta: " + it);
+
+        if (it < (fechamento.size() - (periodoLonga - 1))) {
+            simpCurta.add(calcs.getMovingMediaSimpleChart(fechamento, periodoCurta, it));
+            simpInter.add(calcs.getMovingMediaSimpleChart(fechamento, periodoInterm, it));
+            simpLonga.add(calcs.getMovingMediaSimpleChart(fechamento, periodoLonga, it));
+        }
+        expCurta.add(calcs.average(Double.parseDouble(fechamento.get(it)), multCurto));
+        expInter.add(calcs.average(Double.parseDouble(fechamento.get(it)), multInterm));
+        expLonga.add(calcs.average(Double.parseDouble(fechamento.get(it)), multLong));
+
+        demo.addToSeries(simpCurta.get(it), simpInter.get(it), simpLonga.get(it), expCurta
+                .get(it), expInter.get(it), expLonga.get(it), time.get(it));
+        this.opTime.add(time.get(it));
+        // System.out.println((time.get(it)));
+        it++;
+
+        // System.out.println("Thread: " + stockSymbol + " simplescurta: " + it);
+    }
+
+    private boolean setFlag(boolean b) {
+        return this.flag = b;
+    }
+
+    public boolean getFlag() {
+        return this.flag;
     }
 
 }

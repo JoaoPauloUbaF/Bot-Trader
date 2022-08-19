@@ -1,4 +1,4 @@
-import java.sql.Date;
+import java.util.Date;
 
 public class Caixa {
     private String nomeCliente, simboloAtivo, operação, caixa;

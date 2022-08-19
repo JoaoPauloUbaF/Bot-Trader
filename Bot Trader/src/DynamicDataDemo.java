@@ -115,9 +115,10 @@ public class DynamicDataDemo extends ApplicationFrame implements ActionListener 
         dataset1.addSeries(series5);
         dataset1.addSeries(series6);
 
-        final JFreeChart chart = createChart(dataset, 3600000.0, stockSymbol + "-Gráfico de Médias Simples");
+        final JFreeChart chart = createChart(dataset, (3600000.0 * 12.0), stockSymbol + "-Gráfico de Médias Simples");
 
-        final JFreeChart chart1 = createChart(dataset1, 3600000.0, stockSymbol + "-Gráfico de médias Exponenciais");
+        final JFreeChart chart1 = createChart(dataset1,
+                (3600000.0 * 12.0), stockSymbol + "-Gráfico de médias Exponenciais");
 
         final ChartPanel chartPanel = new ChartPanel(chart);
         final ChartPanel chartPanel1 = new ChartPanel(chart1);

@@ -17,18 +17,16 @@ import java.awt.EventQueue;
 
 public class App {
         public static void main(String[] args) throws Exception {
-                ScheduledExecutorService executor;
 
-                // Date data = DateUtilities.createDate(2022, 1, 3, 15, 00);
-                Stock stock2 = new Stock("BIDI4",
+                Corretora corretora = new Corretora("BIDI4",
+                                "F:/codes/Bot-Trader/Bot Trader/files/NZDUSD_M1_202208010005_202208011314 copy.csv");
+                corretora.addStocks("NZDUSDH1",
                                 "F:/codes/Bot-Trader/Bot Trader/files/NZDUSD_M1_202208010005_202208011314 copy.csv");
 
-                Stock stock1 = new Stock("NZDUSDH1",
-                                "F:/codes/Bot-Trader/Bot Trader/files/NZDUSD_M1_202208010005_202208011314 copy.csv");
-                executor = Executors.newScheduledThreadPool(2);
+                Cliente cliente1 = new Cliente("Rubens", 100.0, corretora);
 
-                executor.scheduleAtFixedRate(stock1, 50, 100, TimeUnit.MILLISECONDS);
-                executor.scheduleAtFixedRate(stock2, 50, 200, TimeUnit.MILLISECONDS);
+                corretora.addCliente(cliente1);
+                corretora.start();
 
         }
 }
