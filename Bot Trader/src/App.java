@@ -1,31 +1,31 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.Executors;
-
-import org.jfree.date.DateUtilities;
-import org.jfree.ui.RefineryUtilities;
-
-import java.awt.EventQueue;
 
 public class App {
         public static void main(String[] args) throws Exception {
 
-                Corretora corretora = new Corretora("BIDI4",
-                                "F:/codes/Bot-Trader/Bot Trader/files/NZDUSD_M1_202208010005_202208011314 copy.csv");
+                Corretora corretora = new Corretora("AUDUSD",
+                                "F:/codes/Bot-Trader/Bot Trader/files/AUDUSD_M1_202208160000_202208170000.csv");
+
+                corretora.addStocks("EURUSD",
+                                "F:/codes/Bot-Trader/Bot Trader/files/EURUSD_M1_202208160001_202208170000.csv");
+
                 corretora.addStocks("NZDUSDH1",
-                                "F:/codes/Bot-Trader/Bot Trader/files/NZDUSD_M1_202208010005_202208011314 copy.csv");
+                                "F:/codes/Bot-Trader/Bot Trader/files/NZDUSD_M1_202208160000_202208170000.csv");
 
-                Cliente cliente1 = new Cliente("Rubens", 100.0, corretora);
+                corretora.addStocks("USDCAD",
+                                "F:/codes/Bot-Trader/Bot Trader/files/USDCAD_M1_202208160000_202208170000.csv");
 
+                Cliente cliente1 = new Cliente("Ludmila", 100.0, corretora, 1);
+                Cliente cliente2 = new Cliente("Mateus", 100.0, corretora, 2);
+                Cliente cliente3 = new Cliente("Pablo", 100.0, corretora, 3);
+                Cliente cliente4 = new Cliente("Debora", 100.0, corretora, 4);
+                Cliente cliente5 = new Cliente("Joao", 100.0, corretora, 5);
+                Cliente cliente6 = new Cliente("Paulo", 100.0, corretora, 6);
                 corretora.addCliente(cliente1);
+                corretora.addCliente(cliente2);
+                corretora.addCliente(cliente3);
+                corretora.addCliente(cliente4);
+                corretora.addCliente(cliente5);
+                corretora.addCliente(cliente6);
                 corretora.start();
 
         }

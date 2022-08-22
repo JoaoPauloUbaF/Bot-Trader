@@ -13,6 +13,7 @@ public class Caixa {
         this.operação = operação;
         this.dataHoraCompraVenda = dataHoraCompraVenda;
         this.valor = valor;
+        this.caixa = caixa;
     }
 
     public Caixa() {

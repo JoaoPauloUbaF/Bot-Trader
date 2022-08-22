@@ -9,13 +9,13 @@ public class Corretora extends Thread {
 
     private int i = 0;
     private List<Stock> stocks = new ArrayList<Stock>();
-    private int operações = 1000;
+    private int operacoes = 1000;
     private boolean isC1Free = true;
     private boolean isC2Free = true;
     private List<Caixa> caixaGeral = new ArrayList<Caixa>();
     private ScheduledExecutorService executor;
     private List<Cliente> clientes = new ArrayList<Cliente>();
-    private boolean fila = false;
+    public boolean fila = false;
 
     public Corretora(String stockSymbol, String filepath) {
         this.stocks.add(new Stock(stockSymbol, filepath));
@@ -45,8 +45,8 @@ public class Corretora extends Thread {
         this.isC1Free = isC1Free;
     }
 
-    public void setOperações() {
-        this.operações--;
+    public void setoperacoes() {
+        this.operacoes--;
     }
 
     public Cliente getCliente(int index) {
@@ -58,65 +58,118 @@ public class Corretora extends Thread {
     }
 
     public void Compra(Stock stock, Cliente cliente, int volume, Date hora) {
-        if (isC1Free()) {
-            setC1Free(false);
-            setOperações();
-            cliente.setSaldoCompra(volume * stock.getValor(hora));
-            caixaGeral.add(
-                    new Caixa(cliente.getNome(), stock.getStockSymbol(), "compra", "Caixa1", hora,
-                            stock.getValor(hora)));
-            // lerCaixaGeral();
-            setC1Free(true);
-        } else if (isC2Free()) {
-            setC2Free(false);
-            setOperações();
-            cliente.setSaldoCompra(volume * stock.getValor(hora));
-            caixaGeral.add(
-                    new Caixa(cliente.getNome(), stock.getStockSymbol(), "compra", "Caixa2", hora,
-                            stock.getValor(hora)));
-            setC2Free(true);
+        if (operacoes > 0) {
+            if (isC1Free()) {
+                setC1Free(false);
+                setoperacoes();
+                cliente.setSaldoCompra(volume * stock.getValor(hora));
+                caixaGeral.add(
+                        new Caixa(cliente.getNome(), stock.getStockSymbol(), "Compra", "Caixa1", hora,
+                                stock.getValor(hora)));
+                cliente.movimentacoes.add(
+                        new Caixa(cliente.getNome(), stock.getStockSymbol(), "Venda", "Caixa2", hora,
+                                stock.getValor(hora)));
+                setC1Free(true);
+                fila = false;
+                lerCaixaGeral();
+            } else if (isC2Free()) {
+                setC2Free(false);
+                setoperacoes();
+                cliente.setSaldoCompra(volume * stock.getValor(hora));
+                caixaGeral.add(
+                        new Caixa(cliente.getNome(), stock.getStockSymbol(), "Compra", "Caixa2", hora,
+                                stock.getValor(hora)));
+                cliente.movimentacoes.add(
+                        new Caixa(cliente.getNome(), stock.getStockSymbol(), "Venda", "Caixa2", hora,
+                                stock.getValor(hora)));
+
+                setC2Free(true);
+                fila = false;
+                lerCaixaGeral();
+            }
+
         } else
-            fila = true;
+
+        {
+            System.out.println("Operações Esgotadas!");
+        }
     }
 
     public void Venda(Stock stock, Cliente cliente, int volume, Date hora) {
-        if (isC1Free()) {
-            setC1Free(false);
-            setOperações();
-            cliente.setSaldoVenda(volume * stock.getValor(hora));
-            caixaGeral.add(
-                    new Caixa(cliente.getNome(), stock.getStockSymbol(), "venda", "Caixa1", hora,
-                            stock.getValor(hora)));
-            setC1Free(true);
-        } else if (isC2Free()) {
-            setC2Free(false);
-            setOperações();
-            cliente.setSaldoVenda(volume * stock.getValor(hora));
-            caixaGeral.add(
-                    new Caixa(cliente.getNome(), stock.getStockSymbol(), "venda", "Caixa2", hora,
-                            stock.getValor(hora)));
-            setC2Free(true);
+        if (operacoes > 0) {
+            if (isC1Free()) {
+                setC1Free(false);
+                setoperacoes();
+                cliente.setSaldoVenda(volume * stock.getValor(hora));
+                caixaGeral.add(
+                        new Caixa(cliente.getNome(), stock.getStockSymbol(), "Venda", "Caixa1", hora,
+                                stock.getValor(hora)));
+                cliente.movimentacoes.add(
+                        new Caixa(cliente.getNome(), stock.getStockSymbol(), "Venda", "Caixa2", hora,
+                                stock.getValor(hora)));
+
+                setC1Free(true);
+                fila = false;
+                lerCaixaGeral();
+            } else if (isC2Free()) {
+                setC2Free(false);
+                setoperacoes();
+                cliente.setSaldoVenda(volume * stock.getValor(hora));
+                caixaGeral.add(
+                        new Caixa(cliente.getNome(), stock.getStockSymbol(), "Venda", "Caixa2", hora,
+                                stock.getValor(hora)));
+                cliente.movimentacoes.add(
+                        new Caixa(cliente.getNome(), stock.getStockSymbol(), "Venda", "Caixa2", hora,
+                                stock.getValor(hora)));
+
+                setC2Free(true);
+                fila = false;
+                lerCaixaGeral();
+            } else if (!isC1Free() && !isC2Free()) {
+                Venda(stock, cliente, volume, hora);
+            }
+
         } else
-            fila = true;
+
+        {
+            System.out.println("Operações Esgotadas!");
+        }
     }
 
     public void lerCaixaGeral() {
-        System.out.println(caixaGeral.get(i).getNomeCliente() + " " + caixaGeral.get(i).getSimboloAtivo() + " "
-                + caixaGeral.get(i).getOperação() + " " + caixaGeral.get(i).getValor() + " "
-                + caixaGeral.get(i).getDataHoraCompraVenda());
-        i++;
         // for (Caixa caixa : caixaGeral) {
         // System.out.println(caixa.getNomeCliente() + " " + caixa.getSimboloAtivo() + "
-        // " + caixa.getOperação() + " "
-        // + caixa.getValor() + " " + caixa.getDataHoraCompraVenda());
+        // "
+        // + caixa.getOperação()
+        // + " " + caixa.getValor()
+        // + " "
+        // + caixa.getCaixa()
+        // + " "
+        // + caixa.getDataHoraCompraVenda());
         // }
+        // System.out.println("-------------------------------------------");
+        System.out.println(caixaGeral.get(caixaGeral.size() - 1).getNomeCliente() + " "
+                + caixaGeral.get(caixaGeral.size() - 1).getSimboloAtivo() + " "
+                + caixaGeral.get(caixaGeral.size() - 1).getOperação() + " "
+                + caixaGeral.get(caixaGeral.size() - 1).getValor() + " "
+                + caixaGeral.get(caixaGeral.size() - 1).getCaixa() + " "
+                + caixaGeral.get(caixaGeral.size() - 1).getDataHoraCompraVenda());
+
     }
 
     public void run() {
-        executor = Executors.newScheduledThreadPool(3);
-        executor.scheduleAtFixedRate(getStocks().get(0), 50, 10, TimeUnit.MILLISECONDS);
-        executor.scheduleAtFixedRate(getStocks().get(1), 50, 10, TimeUnit.MILLISECONDS);
-        executor.scheduleAtFixedRate(getCliente(0), 80, 10, TimeUnit.MILLISECONDS);
+        executor = Executors.newScheduledThreadPool(10);
+        executor.scheduleAtFixedRate(getStocks().get(0), 50, 1000, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(getStocks().get(1), 50, 1000, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(getStocks().get(2), 50, 1000, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(getStocks().get(3), 50, 1000, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(getCliente(0), 75, 1000, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(getCliente(1), 75, 1000, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(getCliente(2), 75, 1000, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(getCliente(3), 75, 1000, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(getCliente(4), 75, 1000, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(getCliente(5), 75, 1000, TimeUnit.MILLISECONDS);
+        System.out.println("Caixa Geral");
     }
 
 }

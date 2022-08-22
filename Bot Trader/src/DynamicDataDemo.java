@@ -126,8 +126,8 @@ public class DynamicDataDemo extends ApplicationFrame implements ActionListener 
         final JPanel content = new JPanel(experimentLayout);
         content.add(chartPanel);
         content.add(chartPanel1);
-        chartPanel.setPreferredSize(new java.awt.Dimension(500, 400));
-        chartPanel1.setPreferredSize(new java.awt.Dimension(500, 400));
+        chartPanel.setPreferredSize(new java.awt.Dimension(450, 400));
+        chartPanel1.setPreferredSize(new java.awt.Dimension(450, 400));
         setContentPane(content);
     }
 
